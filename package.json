@@ -1,8 +1,3 @@
-# Jika Anda menggunakan npm
-npm install ajv@6.12.6 --save-dev
-
-# Jika Anda menggunakan yarn
-yarn add ajv@6.12.6 --dev
 
 {
   "name": "react-typescript-generator",
