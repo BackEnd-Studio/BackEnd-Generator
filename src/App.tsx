@@ -155,6 +155,25 @@ export default function App() {
 
 
   // --- 2. Logika Panggil Gemini API (Master Prompt Logic) ---
+  // --- 2. Logika Panggil Gemini API ---
+// ... (Tambahkan fungsi yang hilang di sini) ...
+
+const fileToGenerativePart = async (file: File) => {
+  const base64EncodedDataPromise = new Promise<string>((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64Data = (reader.result as string).split(',')[1];
+      resolve(base64Data);
+    };
+    reader.readAsDataURL(file);
+  });
+  return {
+    inlineData: { data: await base64EncodedDataPromise, mimeType: file.type },
+  };
+};
+
+// ... const handleGeneratePrompt = async () => { ... }
+  
   const handleGeneratePrompt = async () => {
     if (!imageFile) {
       alert('Silakan unggah gambar terlebih dahulu.');
