@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 // --- Impor Ikon ---
 import { FaWhatsapp, FaTiktok } from 'react-icons/fa';
-import { FaThreads } from 'react-icons/fa6';
+import { BsThreads } from 'react-icons/bs'; // Ikon Threads dari Bootstrap
 
-// --- Impor Firebase (Opsional, tapi kita biarkan untuk nanti) ---
+// --- (Impor Firebase tidak kita pakai di proyek ini) ---
 // import { initializeApp } from "firebase/app";
 // import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
 
@@ -13,7 +13,7 @@ import { FaThreads } from 'react-icons/fa6';
  * =======================================================================
  */
 
-// --- Konfigurasi Firebase (Dibiarkan, tapi tidak dipakai di v10) ---
+// --- Konfigurasi Firebase (Dibiarkan, tapi tidak dipakai di v14) ---
 // const firebaseConfig = {
 //   apiKey: "AIzaSyCvJ6qQxpbCjMrD7Gbe4O9u7h01hhngqmY",
 //   authDomain: "backend-prompt-studio.firebaseapp.com",
@@ -74,7 +74,7 @@ const CATEGORIES = {
   ],
 };
 
-// --- (BARU v10) Database untuk FAQ (Menggunakan teks darimu) ---
+// --- Database untuk FAQ ---
 const faqData = [
   {
     id: 1,
@@ -98,15 +98,67 @@ const faqData = [
   }
 ];
 
+/*
+ * =======================================================================
+ * DEFINISI TIPE TYPESCRIPT (untuk perbaikan error)
+ * =======================================================================
+ */
+interface DropdownOption {
+  id: string;
+  name: string;
+}
+
+// Perbaikan untuk 'title', 'options', 'selectedValue', 'onChange'
+interface DropdownSectionProps {
+  title: string;
+  options: DropdownOption[];
+  selectedValue: string;
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+}
+
+// Perbaikan untuk 'title', 'text', 'isLoading', 'isJson'
+interface PromptOutputBoxProps {
+  title: string;
+  text: string;
+  isLoading: boolean;
+  isJson?: boolean;
+}
+
+// Perbaikan untuk 'label', 'isChecked', 'onChange'
+interface CheckboxProps {
+  label: string;
+  isChecked: boolean;
+  onChange: () => void;
+}
+
+// Perbaikan untuk 'href', 'children'
+interface SocialIconProps {
+  href: string;
+  children: React.ReactNode;
+}
+
+// Tipe data baru untuk FAQ
+interface Faq {
+  id: number;
+  question: string;
+  answer: string;
+}
+
+// Perbaikan untuk 'faq', 'isOpen', 'onToggle'
+interface FAQItemProps {
+  faq: Faq;
+  isOpen: boolean;
+  onToggle: () => void;
+}
 
 /*
  * =======================================================================
- * KOMPONEN UI
+ * KOMPONEN UI (Sekarang dengan Tipe)
  * =======================================================================
  */
 
 // Komponen Dropdown
-const DropdownSection = ({ title, options, selectedValue, onChange }) => (
+const DropdownSection = ({ title, options, selectedValue, onChange }: DropdownSectionProps) => (
   <div className="mb-5">
     <label className="text-lg font-semibold text-gray-300 mb-2 block" htmlFor={title}>
       {title}
@@ -139,7 +191,7 @@ const DropdownSection = ({ title, options, selectedValue, onChange }) => (
 );
 
 // Komponen Kotak Output
-const PromptOutputBox = ({ title, text, isLoading, isJson = false }) => (
+const PromptOutputBox = ({ title, text, isLoading, isJson = false }: PromptOutputBoxProps) => (
   <div className="mb-4">
     <h3 className="text-lg font-semibold text-gray-300 mb-2">{title}</h3>
     <div className={`
@@ -159,7 +211,7 @@ const PromptOutputBox = ({ title, text, isLoading, isJson = false }) => (
 );
 
 // Komponen Checkbox
-const Checkbox = ({ label, isChecked, onChange }) => (
+const Checkbox = ({ label, isChecked, onChange }: CheckboxProps) => (
   <label className="flex items-center space-x-3 cursor-pointer">
     <input
       type="checkbox"
@@ -175,7 +227,7 @@ const Checkbox = ({ label, isChecked, onChange }) => (
 );
 
 // Komponen Ikon Sosial Media
-const SocialIcon = ({ href, children }) => (
+const SocialIcon = ({ href, children }: SocialIconProps) => (
   <a
     href={href}
     target="_blank"
@@ -186,17 +238,15 @@ const SocialIcon = ({ href, children }) => (
   </a>
 );
 
-// --- (BARU v10) Komponen untuk 1 item FAQ ---
-const FAQItem = ({ faq, isOpen, onToggle }) => {
+// --- Komponen untuk 1 item FAQ ---
+const FAQItem = ({ faq, isOpen, onToggle }: FAQItemProps) => {
   return (
     <div className="border-b border-gray-700">
-      {/* Tombol Pertanyaan */}
       <button
         onClick={onToggle}
         className="flex justify-between items-center w-full py-5 text-left"
       >
         <span className="text-md font-medium text-gray-200">{faq.question}</span>
-        {/* Ikon Panah */}
         <svg
           className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
           fill="none"
@@ -207,7 +257,6 @@ const FAQItem = ({ faq, isOpen, onToggle }) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      {/* Konten Jawaban (yang bisa buka-tutup) */}
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 pb-5' : 'max-h-0'}`}
       >
@@ -219,12 +268,11 @@ const FAQItem = ({ faq, isOpen, onToggle }) => {
   );
 };
 
-// --- (BARU v10) Komponen Wrapper untuk FAQ ---
+// --- Komponen Wrapper untuk FAQ ---
 const FAQ = () => {
-  const [openId, setOpenId] = useState(null); // Melacak item mana yang terbuka
+  const [openId, setOpenId] = useState<number | null>(null); // Tipe eksplisit
 
-  // Fungsi untuk membuka/menutup
-  const handleToggle = (id) => {
+  const handleToggle = (id: number) => {
     setOpenId(openId === id ? null : id);
   };
 
@@ -255,8 +303,8 @@ const FAQ = () => {
  */
 export default function App() {
   // State untuk gambar
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
   // State untuk 7 kategori
@@ -280,13 +328,13 @@ export default function App() {
    */
 
   // --- 1. Logika Upload Gambar ---
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (file) {
       setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result);
+        setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
       
@@ -297,11 +345,11 @@ export default function App() {
   };
 
   // --- 2. Logika Panggil Gemini API ---
-  const fileToGenerativePart = async (file) => {
-    const base64EncodedDataPromise = new Promise((resolve) => {
+  const fileToGenerativePart = async (file: File) => {
+    const base64EncodedDataPromise = new Promise<string>((resolve) => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64Data = (reader.result).split(',')[1];
+        const base64Data = (reader.result as string).split(',')[1];
         resolve(base64Data);
       };
       reader.readAsDataURL(file);
@@ -416,7 +464,7 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
         throw new Error('Respon AI tidak valid atau kosong.');
       }
       
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating prompt:", error);
       const errorMsg = `Gagal membuat prompt: ${error.message}`;
       setPromptEN(errorMsg);
@@ -429,10 +477,11 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
 
   /*
    * =======================================================================
-   * TAMPILAN VISUAL (JSX) - DIPERBARUI
+   * TAMPILAN VISUAL (JSX)
    * =======================================================================
    */
   return (
+    // Kita gunakan 'dark' secara permanen karena ini adalah aplikasi dark mode
     <div className="dark min-h-screen bg-gray-900 text-white p-4 md:p-8 font-sans">
       
       {/* --- HEADER --- */}
@@ -444,14 +493,17 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
           Image Prompt Generator
         </h2>
         
-        {/* Ikon Sosial Media */}
+        {/* Ikon Sosial Media (Link sudah diisi dan menggunakan react-icons) */}
         <div className="flex justify-center gap-6 my-5">
+          {/* WhatsApp */}
           <SocialIcon href="https://whatsapp.com/channel/0029Vb6C0bRBKfi8cD3jBh1z">
             <FaWhatsapp className="w-8 h-8" />
           </SocialIcon>
+          {/* Threads (Menggunakan ikon BsThreads) */}
           <SocialIcon href="https://www.threads.com/@b.a.c.k_e.n.d">
-            <FaThreads className="w-8 h-8" />
+            <BsThreads className="w-8 h-8" />
           </SocialIcon>
+          {/* TikTok */}
           <SocialIcon href="https://www.tiktok.com/@b.a.c.k_e.n.d">
             <FaTiktok className="w-8 h-8" />
           </SocialIcon>
@@ -600,17 +652,15 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
 
       </div>
       
-      {/* --- (BARU v10) BAGIAN FAQ --- */}
+      {/* --- BAGIAN FAQ --- */}
       <FAQ />
-      {/* --------------------------- */}
       
-      {/* --- FOOTER (DIPERBARUI v10) --- */}
+      {/* --- FOOTER --- */}
       <footer className="text-center py-6 max-w-md mx-auto">
         <p className="text-xl font-semibold text-gray-400">
           Create by BackEnd
         </p>
       </footer>
-      {/* ----------------------------- */}
       
     </div>
   );
