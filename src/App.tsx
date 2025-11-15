@@ -672,61 +672,61 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
           </div>
           
           {/* --- Render Kondisional Sesuai Pilihan --- */}
-          {showJson ? (
-            // Tampilan JSON (1 Kotak)
-            <PromptOutputBox 
-              title="Hasil JSON (Raw)" 
-              text={rawJson}
-              isLoading={isGenerating}
-              isJson={true} 
-            />
-          ) : (
-            // Tampilan BIASA (2 Kotak)
-            <>
-              <PromptOutputBox 
-                title="Prompt (English)" 
-                text={promptEnglish}
-                isLoading={isGenerating}
-              />
-              <PromptOutputBox 
-                title="Prompt (Bahasa Indonesia)" 
-                text={promptIndonesia}
-                isLoading={isGenerating}
-              />
-            </>
-          )}
+          {/* --- GANTI KODE LAMA ANDA DENGAN INI --- */}
+{showJson ? (
+  // Tampilan JSON (1 Kotak)
+  <>
+    <label htmlFor="raw-json" className="block text-sm font-medium text-gray-300 mb-2">
+      Hasil JSON (Raw)
+    </label>
+    <div className="relative w-full">
+      <textarea
+        id="raw-json"
+        readOnly
+        value={rawJson} // Pastikan Anda punya state 'rawJson'
+        className="w-full h-40 p-3 bg-gray-700 rounded text-white"
+        placeholder="Hasil JSON akan muncul di sini..."
+      />
+      <CopyButton textToCopy={rawJson} />
+    </div>
+  </>
+) : (
+  // Tampilan BIASA (2 Kotak)
+  <>
+    {/* Prompt (English) */}
+    <label htmlFor="prompt-english" className="block text-sm font-medium text-gray-300 mb-2">
+      Prompt (English)
+    </label>
+    <div className="relative w-full mb-4">
+      <textarea
+        id="prompt-english"
+        readOnly
+        value={promptEnglish} 
+        placeholder="Prompt akan muncul di sini..."
+        className="w-full h-40 p-3 bg-gray-700 rounded text-white"
+      />
+      <CopyButton textToCopy={promptEnglish} />
+    </div>
+
+    {/* Prompt (Bahasa Indonesia) */}
+    <label htmlFor="prompt-indonesia" className="block text-sm font-medium text-gray-300 mb-2">
+      Prompt (Bahasa Indonesia)
+    </label>
+    <div className="relative w-full">
+      <textarea
+        id="prompt-indonesia"
+        readOnly
+        value={promptIndonesian}
+        placeholder="Prompt akan muncul di sini..."
+        className="w-full h-40 p-3 bg-gray-700 rounded text-white"
+      />
+      <CopyButton textToCopy={promptIndonesian} />
+    </div>
+  </>
+)}
+{/* --- BATAS AKHIR KODE BARU --- */}
+
         </div>
-
-{/* Prompt (English) */}
-<label htmlFor="prompt-english">Prompt (English)</label>
-{/* TAMBAHKAN div "relative" ini */}
-<div className="relative w-full">
-  <textarea
-    id="prompt-english"
-    readOnly
-    value={promptEnglish} // Pastikan ini terhubung ke state Anda
-    placeholder="Prompt akan muncul di sini..."
-    className="w-full h-40 p-3 bg-gray-700 rounded text-white"
-  />
-  {/* TAMBAHKAN TOMBOL INI */}
-  <CopyButton textToCopy={promptEnglish} />
-</div>
-
-{/* Prompt (Bahasa Indonesia) */}
-<label htmlFor="prompt-indonesia">Prompt (Bahasa Indonesia)</label>
-{/* TAMBAHKAN div "relative" ini */}
-<div className="relative w-full">
-  <textarea
-    id="prompt-indonesia"
-    readOnly
-    value={promptIndonesia} // Pastikan ini terhubung ke state Anda
-    placeholder="Prompt akan muncul di sini..."
-    className="w-full h-40 p-3 bg-gray-700 rounded text-white"
-  />
-  {/* TAMBAHKAN TOMBOL INI */}
-  <CopyButton textToCopy={promptIndonesia} />
-</div>
-
         
       </div>
       
