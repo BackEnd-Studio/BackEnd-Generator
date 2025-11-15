@@ -4,6 +4,42 @@ import React, { useState, useMemo } from 'react';
 // TAMBAHKAN IMPORT BARU INI DARI 'io5' (Ionicons 5)
 import { IoLogoWhatsapp, IoLogoTiktok } from 'react-icons/io5'; // Ambil ini dari io5
 import { BsThreads } from 'react-icons/bs'; // Ambil ini dari bs
+import React, { useState } from 'react';
+
+// --- di luar fungsi default App() ---
+
+const CopyButton = ({ textToCopy }: { textToCopy: string }) => {
+  const [copyStatus, setCopyStatus] = useState('Copy'); // Teks tombol
+
+  const handleCopy = () => {
+    if (!textToCopy) return; // Jangan lakukan apa-apa jika tidak ada teks
+
+    navigator.clipboard.writeText(textToCopy)
+      .then(() => {
+        // Berhasil! Beri umpan balik visual
+        setCopyStatus('Copied!');
+        setTimeout(() => {
+          setCopyStatus('Copy');
+        }, 2000); // Setel ulang teks tombol setelah 2 detik
+      })
+      .catch(err => {
+        console.error('Gagal menyalin teks: ', err);
+        setCopyStatus('Error'); // Tampilkan jika ada error
+      });
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      // Ini adalah style Tailwind. Sesuaikan jika perlu.
+      className="absolute top-3 right-3 px-3 py-1 bg-gray-600 text-white text-xs rounded-md hover:bg-gray-500 disabled:opacity-50"
+      // Nonaktifkan tombol jika tidak ada teks, atau jika sedang 'Copied!'
+      disabled={!textToCopy || copyStatus === 'Copied!'}
+    >
+      {copyStatus}
+    </button>
+  );
+};
 
 // --- (Impor Firebase tidak kita pakai di proyek ini) ---
 // import { initializeApp } from "firebase/app";
@@ -660,6 +696,37 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
           )}
         </div>
 
+{/* Prompt (English) */}
+<label htmlFor="prompt-english">Prompt (English)</label>
+{/* TAMBAHKAN div "relative" ini */}
+<div className="relative w-full">
+  <textarea
+    id="prompt-english"
+    readOnly
+    value={promptEnglish} // Pastikan ini terhubung ke state Anda
+    placeholder="Prompt akan muncul di sini..."
+    className="w-full h-40 p-3 bg-gray-700 rounded text-white"
+  />
+  {/* TAMBAHKAN TOMBOL INI */}
+  <CopyButton textToCopy={promptEnglish} />
+</div>
+
+{/* Prompt (Bahasa Indonesia) */}
+<label htmlFor="prompt-indonesia">Prompt (Bahasa Indonesia)</label>
+{/* TAMBAHKAN div "relative" ini */}
+<div className="relative w-full">
+  <textarea
+    id="prompt-indonesia"
+    readOnly
+    value={promptIndonesian} // Pastikan ini terhubung ke state Anda
+    placeholder="Prompt akan muncul di sini..."
+    className="w-full h-40 p-3 bg-gray-700 rounded text-white"
+  />
+  {/* TAMBAHKAN TOMBOL INI */}
+  <CopyButton textToCopy={promptIndonesian} />
+</div>
+
+        
       </div>
       
       {/* --- BAGIAN FAQ --- */}
