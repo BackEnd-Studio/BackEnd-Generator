@@ -405,8 +405,8 @@ const [showJson, setShowJson] = useState(false);
     }
     
     setIsGenerating(true);
-    setPromptEN('');
-    setPromptID('');
+    setPromptEnglish('');
+    setPromptIndonesia('');
     setRawJson(''); 
     
     try {
