@@ -550,37 +550,37 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
             title="Pilih Model AI"
             options={CATEGORIES.models}
             selectedValue={selectedModel}
-            onChange={(e) => setModel(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setModel(e.target.value)}
           />
           <DropdownSection 
             title="Aspek Rasio"
             options={CATEGORIES.ratios}
             selectedValue={selectedRatio}
-            onChange={(e) => setRatio(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setRatio(e.target.value)}
           />
           <DropdownSection 
             title="Tangkapan Kamera"
             options={CATEGORIES.cameraShots}
             selectedValue={selectedShot}
-            onChange={(e) => setShot(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setShot(e.target.value)}
           />
           <DropdownSection 
             title="Kualitas Gambar"
             options={CATEGORIES.quality}
             selectedValue={selectedQuality}
-            onChange={(e) => setQuality(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setQuality(e.target.value)}
           />
           <DropdownSection 
             title="Perangkat Pengambil"
             options={CATEGORIES.devices}
             selectedValue={selectedDevice}
-            onChange={(e) => setDevice(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setDevice(e.target.value)}
           />
           <DropdownSection 
             title="Gaya"
             options={CATEGORIES.styles}
             selectedValue={selectedStyle}
-            onChange={(e) => setStyle(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setStyle(e.target.value)}
           />
 
           {/* --- Tombol "Buat Prompt" --- */}
