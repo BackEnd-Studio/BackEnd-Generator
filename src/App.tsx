@@ -535,19 +535,19 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
 <div className="flex justify-center gap-6 my-5">
   
   {/* WhatsApp */}
-  <SocialIcon href="...whatsapp...">
+  <SocialIcon href="https://whatsapp.com/channel/0029Vb6C0bRBKfi8cD3jBh1z">
     {/* @ts-ignore */}
     <IoLogoWhatsapp className="w-8 h-8" />
   </SocialIcon>
 
   {/* Threads */}
-  <SocialIcon href="...threads...">
+  <SocialIcon href="https://www.threads.com/@b.a.c.k_e.n.d">
     {/* @ts-ignore */}
     <BsThreads className="w-8 h-8" /> 
   </SocialIcon>
 
   {/* TikTok */}
-  <SocialIcon href="...tiktok...">
+  <SocialIcon href="https://www.tiktok.com/@b.a.c.k_e.n.d">
     {/* @ts-ignore */}
     <IoLogoTiktok className="w-8 h-8" />
   </SocialIcon>
