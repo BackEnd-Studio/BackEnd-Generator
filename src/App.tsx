@@ -1,8 +1,6 @@
 import React, { useState, useMemo } from 'react';
 // --- Impor Ikon ---
 
-import { FaTiktok } from 'react-icons/fa6';
-import { BsThreads } from 'react-icons/bs'; // Ikon Threads dari Bootstrap
 
 // --- (Impor Firebase tidak kita pakai di proyek ini) ---
 // import { initializeApp } from "firebase/app";
@@ -500,14 +498,14 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
           <SocialIcon href="https://whatsapp.com/channel/0029Vb6C0bRBKfi8cD3jBh1z">
             <FaWhatsapp className="w-8 h-8" />
           </SocialIcon> */}
-          {/* Threads (Menggunakan ikon BsThreads) */}
+          {/* Threads (Menggunakan ikon BsThreads) 
           <SocialIcon href="https://www.threads.com/@b.a.c.k_e.n.d">
             <BsThreads className="w-8 h-8" />
-          </SocialIcon>
-          {/* TikTok */}
+          </SocialIcon> */}
+          {/* TikTok 
           <SocialIcon href="https://www.tiktok.com/@b.a.c.k_e.n.d">
             <FaTiktok className="w-8 h-8" />
-          </SocialIcon>
+          </SocialIcon> */}
         </div>
       </header>
       
