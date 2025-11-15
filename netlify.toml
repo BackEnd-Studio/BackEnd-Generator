@@ -1,0 +1,3 @@
+[build]
+  environment = { NETLIFY_BUILD_DEBUG = "true" }
+  
