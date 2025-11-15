@@ -496,8 +496,8 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
       if (text) {
         setRawJson(JSON.stringify(JSON.parse(text), null, 2)); 
         const jsonResponse = JSON.parse(text); 
-        setPromptEN(jsonResponse.prompt_en);
-        setPromptID(jsonResponse.prompt_id);
+        setPromptEnglish(jsonResponse.prompt_en);
+        setPromptIndonesia(jsonResponse.prompt_id);
       } else {
         console.error("Respon API tidak valid:", result);
         throw new Error('Respon AI tidak valid atau kosong.');
@@ -506,8 +506,8 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
     } catch (error: any) {
       console.error("Error generating prompt:", error);
       const errorMsg = `Gagal membuat prompt: ${error.message}`;
-      setPromptEN(errorMsg);
-      setPromptID(errorMsg);
+      setPromptEnglish(errorMsg);
+      setPromptIndonesia(errorMsg);
       setRawJson(`{ "error": "${error.message}" }`);
     } finally {
       setIsGenerating(false);
