@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 // --- Impor Ikon ---
-import { FaWhatsapp } from 'react-icons/fa6';
+
 import { FaTiktok } from 'react-icons/fa6';
 import { BsThreads } from 'react-icons/bs'; // Ikon Threads dari Bootstrap
 
@@ -496,10 +496,10 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
         
         {/* Ikon Sosial Media (Link sudah diisi dan menggunakan react-icons) */}
         <div className="flex justify-center gap-6 my-5">
-          {/* WhatsApp */}
+          {/* WhatsApp 
           <SocialIcon href="https://whatsapp.com/channel/0029Vb6C0bRBKfi8cD3jBh1z">
             <FaWhatsapp className="w-8 h-8" />
-          </SocialIcon>
+          </SocialIcon> */}
           {/* Threads (Menggunakan ikon BsThreads) */}
           <SocialIcon href="https://www.threads.com/@b.a.c.k_e.n.d">
             <BsThreads className="w-8 h-8" />
