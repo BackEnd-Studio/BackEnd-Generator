@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react';
 // --- Impor Ikon ---
 
+// TAMBAHKAN IMPORT BARU INI DARI 'io5' (Ionicons 5)
+import { IoLogoWhatsapp, IoLogoThreads, IoLogoTiktok } from 'react-icons/io5';
 
 // --- (Impor Firebase tidak kita pakai di proyek ini) ---
 // import { initializeApp } from "firebase/app";
@@ -494,18 +496,18 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
         
         {/* Ikon Sosial Media (Link sudah diisi dan menggunakan react-icons) */}
         <div className="flex justify-center gap-6 my-5">
-          {/* WhatsApp 
+          {/* WhatsApp */}
           <SocialIcon href="https://whatsapp.com/channel/0029Vb6C0bRBKfi8cD3jBh1z">
-            <FaWhatsapp className="w-8 h-8" />
-          </SocialIcon> */}
-          {/* Threads (Menggunakan ikon BsThreads) 
+            <IoLogoWhatsapp className="w-8 h-8" />
+          </SocialIcon>
+          {/* Threads (Menggunakan ikon BsThreads) */}
           <SocialIcon href="https://www.threads.com/@b.a.c.k_e.n.d">
-            <BsThreads className="w-8 h-8" />
-          </SocialIcon> */}
-          {/* TikTok 
+            <IoLogoWhatsapp className="w-8 h-8" />
+          </SocialIcon>
+          {/* TikTok */}
           <SocialIcon href="https://www.tiktok.com/@b.a.c.k_e.n.d">
-            <FaTiktok className="w-8 h-8" />
-          </SocialIcon> */}
+            <IoLogoWhatsapp className="w-8 h-8" />
+          </SocialIcon>
         </div>
       </header>
       
