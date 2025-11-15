@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 // --- Impor Ikon ---
-import { FaWhatsapp, FaTiktok } from 'react-icons/fa6';
+import { FaWhatsapp, FaTiktok } from 'react-icons/fa';
 import { BsThreads } from 'react-icons/bs'; // Ikon Threads dari Bootstrap
 
 // --- (Impor Firebase tidak kita pakai di proyek ini) ---
