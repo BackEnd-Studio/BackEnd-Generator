@@ -719,12 +719,12 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
   <textarea
     id="prompt-indonesia"
     readOnly
-    value={promptIndonesian} // Pastikan ini terhubung ke state Anda
+    value={promptIndonesia} // Pastikan ini terhubung ke state Anda
     placeholder="Prompt akan muncul di sini..."
     className="w-full h-40 p-3 bg-gray-700 rounded text-white"
   />
   {/* TAMBAHKAN TOMBOL INI */}
-  <CopyButton textToCopy={promptIndonesian} />
+  <CopyButton textToCopy={promptIndonesia} />
 </div>
 
         
