@@ -378,8 +378,8 @@ const [showJson, setShowJson] = useState(false);
       };
       reader.readAsDataURL(file);
       
-      setPromptEN('');
-      setPromptID('');
+      setPromptEnglish('');
+      setPromptIndonesia('');
       setRawJson('');
     }
   };
