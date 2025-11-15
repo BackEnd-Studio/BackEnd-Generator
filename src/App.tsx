@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 // TAMBAHKAN IMPORT BARU INI DARI 'io5' (Ionicons 5)
 import { IoLogoWhatsapp, IoLogoTiktok } from 'react-icons/io5'; // Ambil ini dari io5
 import { BsThreads } from 'react-icons/bs'; // Ambil ini dari bs
-import React, { useState } from 'react';
+
 
 // --- di luar fungsi default App() ---
 
