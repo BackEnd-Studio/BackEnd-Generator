@@ -22,10 +22,10 @@
   },
   "scripts": {
   "start": "react-scripts start",
-"build": "echo 'No build command needed'",
+  "build": "react-scripts build",
   "test": "react-scripts test --env=jsdom",
   "eject": "react-scripts eject",
-  "postinstall": "npm run build || true"
+  "postinstall": "npm run build || true" 
 },
   "browserslist": {
     "production": [
