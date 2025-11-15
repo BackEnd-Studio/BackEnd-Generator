@@ -502,11 +502,11 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
           </SocialIcon>
           {/* Threads (Menggunakan ikon BsThreads) */}
           <SocialIcon href="https://www.threads.com/@b.a.c.k_e.n.d">
-            <IoLogoWhatsapp className="w-8 h-8" />
+            <IoLogoThreads className="w-8 h-8" />
           </SocialIcon>
           {/* TikTok */}
           <SocialIcon href="https://www.tiktok.com/@b.a.c.k_e.n.d">
-            <IoLogoWhatsapp className="w-8 h-8" />
+            <IoLogoTiktok className="w-8 h-8" />
           </SocialIcon>
         </div>
       </header>
