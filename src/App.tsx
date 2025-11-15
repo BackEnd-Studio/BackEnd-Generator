@@ -355,7 +355,7 @@ export default function App() {
 
   // State untuk output
 const [promptEnglish, setPromptEnglish] = useState(''); 
-const [promptIndonesian, setPromptIndonesian] = useState(''); 
+const [promptIndonesia, setPromptIndonesia] = useState(''); 
 const [promptID, setPromptID] = useState('');
 const [rawJson, setRawJson] = useState('');
 const [showJson, setShowJson] = useState(false);
