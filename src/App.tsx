@@ -423,49 +423,7 @@ const [showJson, setShowJson] = useState(false);
       const apiKey = "AIzaSyCvJ6qQxpbCjMrD7Gbe4O9u7h01hhngqmY"; 
       const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
       
-      const imagePart = await fileToGenerativePart(imageFile);
       
-      const systemPrompt = `
-        Anda adalah seorang ahli generator prompt gambar.
-        Tugas Anda adalah menganalisa gambar yang diberikan pengguna dan menggabungkannya dengan spesifikasi teknis yang mereka pilih.
-        
-        Spesifikasi teknis pilihan pengguna:
-        - Model AI: ${specs.model}
-        - Aspek Rasio: ${specs.ratio}
-        - Tangkapan Kamera: ${specs.shot}
-        - Kualitas: ${specs.quality}
-        - Perangkat: ${specs.device}
-        - Gaya: ${specs.style}
-        
-        Tugas Anda:
-        1. Analisa gambar (subjek, aksi, latar belakang).
-        2. Buat satu prompt deskriptif dalam Bahasa Inggris yang menggabungkan analisa Anda dengan SEMUA spesifikasi teknis.
-Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
-        3. Buat satu prompt deskriptif dalam Bahasa Indonesia yang menggabungkan analisa Anda dengan SEMUA spesifikasi teknis.
-        4. Kembalikan hasilnya HANYA sebagai objek JSON yang valid dengan format:
-           {
-             "prompt_en": "...",
-             "prompt_id": "..."
-           }
-      `;
-      
-      const payload = {
-        contents: [{ role: "user", parts: [{ text: "Generate prompts based on my image and specs." }, imagePart] }],
-        systemInstruction: {
-          parts: [{ text: systemPrompt }]
-        },
-        generationConfig: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: "OBJECT",
-            properties: {
-              prompt_en: { type: "STRING" },
-              prompt_id: { type: "STRING" }
-            },
-            required: ["prompt_en", "prompt_id"]
-          }
-        }
-      };
 
       let response;
       let delay = 1000;
