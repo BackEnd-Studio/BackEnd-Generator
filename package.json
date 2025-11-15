@@ -16,9 +16,11 @@
     "react-icons": "latest"
   },
   "devDependencies": {
-    "@types/react": "18.2.38",
-    "@types/react-dom": "18.2.15",
-    "typescript": "^5.0.0"  
+  "@types/react": "^18.0.0", // Perlu versi 18.x
+  "@types/react-dom": "^18.0.0", // Perlu versi 18.x
+  "typescript": "^5.0.0", // Perlu 5.x untuk kompatibilitas modern
+  // ... dependensi dev lainnya
+}  
   },
   "scripts": {
     "start": "react-scripts start",
