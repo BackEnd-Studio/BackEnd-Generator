@@ -685,12 +685,12 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
             <>
               <PromptOutputBox 
                 title="Prompt (English)" 
-                text={promptEN}
+                text={promptEnglish}
                 isLoading={isGenerating}
               />
               <PromptOutputBox 
                 title="Prompt (Bahasa Indonesia)" 
-                text={promptID}
+                text={promptIndonesia}
                 isLoading={isGenerating}
               />
             </>
@@ -736,7 +736,7 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
       {/* --- FOOTER --- */}
       <footer className="text-center py-6 max-w-md mx-auto">
         <p className="text-xl font-semibold text-gray-400">
-          Create by BackEnd
+          Copyright@2025 by BackEnd
         </p>
       </footer>
       
