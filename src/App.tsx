@@ -495,21 +495,29 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
           Image Prompt Generator
         </h2>
         
-        {/* Ikon Sosial Media (Link sudah diisi dan menggunakan react-icons) */}
-        <div className="flex justify-center gap-6 my-5">
-          {/* WhatsApp */}
-          <SocialIcon href="https://whatsapp.com/channel/0029Vb6C0bRBKfi8cD3jBh1z">
-            <IoLogoWhatsapp className="w-8 h-8" />
-          </SocialIcon>
-          {/* Threads (Menggunakan ikon BsThreads) */}
-          <SocialIcon href="https://www.threads.com/@b.a.c.k_e.n.d">
-            <BsThreads className="w-8 h-8" />
-          </SocialIcon>
-          {/* TikTok */}
-          <SocialIcon href="https://www.tiktok.com/@b.a.c.k_e.n.d">
-            <IoLogoTiktok className="w-8 h-8" />
-          </SocialIcon>
-        </div>
+        {/* Ikon Sosial Media */}
+<div className="flex justify-center gap-6 my-5">
+  
+  {/* WhatsApp */}
+  <SocialIcon href="...whatsapp...">
+    {/* @ts-ignore */}
+    <IoLogoWhatsapp className="w-8 h-8" />
+  </SocialIcon>
+
+  {/* Threads */}
+  <SocialIcon href="...threads...">
+    {/* @ts-ignore */}
+    <BsThreads className="w-8 h-8" /> 
+  </SocialIcon>
+
+  {/* TikTok */}
+  <SocialIcon href="...tiktok...">
+    {/* @ts-ignore */}
+    <IoLogoTiktok className="w-8 h-8" />
+  </SocialIcon>
+  
+</div>
+
       </header>
       
       {/* --- KARTU APLIKASI --- */}
