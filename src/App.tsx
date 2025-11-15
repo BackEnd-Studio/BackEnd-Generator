@@ -354,10 +354,12 @@ export default function App() {
   const [selectedStyle, setStyle] = useState('photorealistic');
 
   // State untuk output
-  const [promptEN, setPromptEN] = useState('');
-  const [promptID, setPromptID] = useState('');
-  const [rawJson, setRawJson] = useState('');
-  const [showJson, setShowJson] = useState(false);
+const [promptEnglish, setPromptEnglish] = useState(''); 
+const [promptIndonesian, setPromptIndonesian] = useState(''); 
+const [promptID, setPromptID] = useState('');
+const [rawJson, setRawJson] = useState('');
+const [showJson, setShowJson] = useState(false);
+
   
   /*
    * =======================================================================
