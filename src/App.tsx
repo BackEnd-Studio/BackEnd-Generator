@@ -2,7 +2,8 @@ import React, { useState, useMemo } from 'react';
 // --- Impor Ikon ---
 
 // TAMBAHKAN IMPORT BARU INI DARI 'io5' (Ionicons 5)
-import { IoLogoWhatsapp, IoLogoThreads, IoLogoTiktok } from 'react-icons/io5';
+import { IoLogoWhatsapp, IoLogoTiktok } from 'react-icons/io5'; // Ambil ini dari io5
+import { BsThreads } from 'react-icons/bs'; // Ambil ini dari bs
 
 // --- (Impor Firebase tidak kita pakai di proyek ini) ---
 // import { initializeApp } from "firebase/app";
@@ -502,7 +503,7 @@ Jadikan prompt bahasa Inggris lebih detail, sinematik, dan artistik.
           </SocialIcon>
           {/* Threads (Menggunakan ikon BsThreads) */}
           <SocialIcon href="https://www.threads.com/@b.a.c.k_e.n.d">
-            <IoLogoThreads className="w-8 h-8" />
+            <BsThreads className="w-8 h-8" />
           </SocialIcon>
           {/* TikTok */}
           <SocialIcon href="https://www.tiktok.com/@b.a.c.k_e.n.d">
