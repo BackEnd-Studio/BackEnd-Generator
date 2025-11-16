@@ -1,160 +1,77 @@
-import React, { useState } from "react"; import { IoLogoWhatsapp, IoLogoTiktok } from "react-icons/io5"; import { BsThreads } from "react-icons/bs";
+import React, { useState } from "react"; import { Copy, FileJson } from "lucide-react";
 
-// ------------------------- // TYPES // ------------------------- interface DropdownOption { id: string; name: string; } interface DropdownSectionProps { title: string; options: DropdownOption[]; selectedValue: string; onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void; } interface SocialIconProps { href: string; children: React.ReactNode; } interface CheckboxProps { label: string; isChecked: boolean; onChange: () => void; } interface FAQItem { id: number; question: string; answer: string; }
+// --- DEFINISI TIPE TAMBAHAN UNTUK FAQ --- interface Faq { id: number; question: string; answer: string; } interface FAQItemProps { faq: Faq; isOpen: boolean; onToggle: () => void; }
 
-// ------------------------- // DATA // ------------------------- const CATEGORIES = { models: [ { id: 'gemini-flash', name: 'Gemini Flash' }, { id: 'gemini-pro', name: 'Gemini Pro' }, { id: 'dall-e-3', name: 'DALL-E 3' }, { id: 'midjourney-v6', name: 'Midjourney v6' }, { id: 'sdxl', name: 'Stable Diffusion XL' }, ], ratios: [ { id: '3:4', name: '3:4 (Portrait)' }, { id: '4:3', name: '4:3 (Landscape)' }, { id: '1:1', name: '1:1 (Square)' }, ], cameraShots: [ { id: 'close-up', name: 'Close-up' }, { id: 'medium-shot', name: 'Medium Shot' }, { id: 'long-shot', name: 'Long Shot' }, ], quality: [ { id: 'standard', name: 'Standard' }, { id: 'hd', name: 'HD' }, { id: 'ultra', name: 'Ultra' }, ], devices: [ { id: 'iphone-16', name: 'iPhone 16 Pro Max' }, { id: 'dslr', name: 'DSLR Camera' }, ], styles: [ { id: 'photorealistic', name: 'Photorealistic' }, { id: 'anime', name: 'Anime' }, { id: 'cyberpunk', name: 'Cyberpunk' }, ], };
+// --- Database FAQ --- const faqData: Faq[] = [ { id: 1, question: "Apa itu BackEnd Generator?", answer: "Adalah alat bantu untuk menganalisis sebuah gambar dan otomatis membuat prompt teks detail menggunakan Gemini." }, { id: 2, question: "Bagaimana cara kerjanya?", answer: "1. Unggah gambar.\n2. Atur parameter.\n3. Klik 'Buat Prompt'.\n4. Aplikasi meminta Gemini API untuk menganalisis gambar dan menghasilkan prompt." }, { id: 3, question: "Apakah aplikasi ini gratis?", answer: "Ya, aplikasi ini gratis digunakan. Kami berharap aplikasi ini membantu Anda." } ];
 
-const faqData: FAQItem[] = [ { id: 1, question: 'Apa itu BackEnd Generator?', answer: 'BackEnd Generator adalah alat bantu untuk menganalisis sebuah gambar dan menyusun prompt AI yang mendetail dalam bahasa Inggris dan Indonesia.' }, { id: 2, question: 'File apa yang didukung?', answer: 'Umumnya JPG, PNG dan WebP. Pastikan ukuran tidak terlalu besar (mis. < 8MB) agar proses upload cepat.' }, ];
+// --- Komponen FAQItem --- const FAQItem = ({ faq, isOpen, onToggle }: FAQItemProps) => (
 
-// ------------------------- // UTILITY COMPONENTS // ------------------------- const SocialIcon = ({ href, children }: SocialIconProps) => ( <a href={href} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-all duration-200"> {children} </a> );
-
-const DropdownSection = ({ title, options, selectedValue, onChange }: DropdownSectionProps) => (
-
-  <div className="mb-4">
-    <label className="block text-sm font-medium text-gray-300 mb-2">{title}</label>
-    <select value={selectedValue} onChange={onChange} className="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-      {options.map(opt => (
-        <option key={opt.id} value={opt.id}>{opt.name}</option>
-      ))}
-    </select>
+  <div className="border-b border-gray-700">
+    <button
+      onClick={onToggle}
+      className="flex justify-between items-center w-full py-5 text-left"
+    >
+      <span className="text-md font-medium text-gray-200">{faq.question}</span>
+      <svg
+        className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`}
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+    <div className={`overflow-hidden transition-all duration-300 ${isOpen ? "max-h-96 pb-5" : "max-h-0"}`}>
+      <p className="text-gray-400 text-sm leading-relaxed whitespace-pre-line">{faq.answer}</p>
+    </div>
   </div>
-);const Checkbox = ({ label, isChecked, onChange }: CheckboxProps) => ( <label className="flex items-center gap-3 cursor-pointer select-none"> <input type="checkbox" checked={isChecked} onChange={onChange} className="w-4 h-4 text-blue-500 bg-gray-700 border-gray-600 rounded focus:ring-blue-400" /> <span className="text-gray-300 text-sm">{label}</span> </label> );
+);// --- Komponen FAQ Wrapper --- const FAQ = () => { const [openId, setOpenId] = useState<number | null>(null);
 
-const CopyButton = ({ textToCopy }: { textToCopy: string }) => { const [copyStatus, setCopyStatus] = useState('Copy'); const handleCopy = async () => { if (!textToCopy) return; try { await navigator.clipboard.writeText(textToCopy); setCopyStatus('Copied!'); setTimeout(() => setCopyStatus('Copy'), 2000); } catch (err) { setCopyStatus('Error'); setTimeout(() => setCopyStatus('Copy'), 2000); } };
+return ( <div className="max-w-md mx-auto my-8 p-6 bg-gray-800 rounded-2xl shadow-xl"> <h2 className="text-3xl font-bold text-center text-white mb-6">FAQ</h2> <div className="divide-y divide-gray-700"> {faqData.map(faq => ( <FAQItem key={faq.id} faq={faq} isOpen={openId === faq.id} onToggle={() => setOpenId(openId === faq.id ? null : faq.id)} /> ))} </div> </div> ); };
 
-return ( <button onClick={handleCopy} className="absolute top-2 right-2 px-3 py-1 bg-gray-600 text-white text-xs rounded-md hover:bg-gray-500 disabled:opacity-50"> {copyStatus} </button> ); };
+// --- MAIN APP --- export default function App() { const [selectedLang, setSelectedLang] = useState<"id" | "en">("id"); const [output, setOutput] = useState({ id: "", en: "" });
 
-const FAQ = () => { const [openId, setOpenId] = useState<number | null>(null); const toggle = (id: number) => setOpenId(openId === id ? null : id);
+const handleCopy = () => { navigator.clipboard.writeText(output[selectedLang]); };
 
-return ( <div className="max-w-md mx-auto mt-8"> <h3 className="text-2xl font-bold text-center mb-4 text-blue-400">FAQ</h3> {faqData.map(item => ( <div key={item.id} className="bg-gray-800 p-4 rounded-xl mb-3 border border-gray-700"> <button onClick={() => toggle(item.id)} className="w-full flex justify-between items-center text-left"> <span className="text-gray-200 font-medium">{item.question}</span> <span className="text-blue-400 text-xl">{openId === item.id ? '−' : '+'}</span> </button> <div className={mt-2 overflow-hidden transition-all duration-300 ${openId === item.id ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}}> <p className="text-gray-400 text-sm mt-2">{item.answer}</p> </div> </div> ))} </div> ); };
+return ( <div className="min-h-screen w-full bg-[#0d0d0d] text-white px-5 py-10 flex flex-col items-center"> <h1 className="text-4xl font-bold mb-6 text-center">BACKEND GENERATOR</h1>
 
-// ------------------------- // HELPERS // ------------------------- const fileToGenerativePart = async (file: File) => { const base64 = await new Promise<string>((resolve, reject) => { const r = new FileReader(); r.onloadend = () => { const s = r.result as string; const parts = s.split(','); resolve(parts.length > 1 ? parts[1] : parts[0]); }; r.onerror = () => reject(new Error('Gagal membaca file')); r.readAsDataURL(file); });
-
-return { inlineData: { data: base64, mimeType: file.type } }; };
-
-// ------------------------- // MAIN APP // ------------------------- export default function App() { // file & preview const [imageFile, setImageFile] = useState<File | null>(null); const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-// selectors const [selectedModel, setModel] = useState(CATEGORIES.models[0].id); const [selectedRatio, setRatio] = useState(CATEGORIES.ratios[0].id); const [selectedShot, setShot] = useState(CATEGORIES.cameraShots[0].id); const [selectedQuality, setQuality] = useState(CATEGORIES.quality[0].id); const [selectedDevice, setDevice] = useState(CATEGORIES.devices[0].id); const [selectedStyle, setStyle] = useState(CATEGORIES.styles[0].id);
-
-// outputs const [promptEnglish, setPromptEnglish] = useState(''); const [promptIndonesian, setPromptIndonesian] = useState(''); const [rawJson, setRawJson] = useState(''); const [showJson, setShowJson] = useState(false); const [isGenerating, setIsGenerating] = useState(false);
-
-// handlers const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => { const file = e.target.files?.[0] ?? null; if (file) { setImageFile(file); const reader = new FileReader(); reader.onloadend = () => setImagePreview(reader.result as string); reader.readAsDataURL(file);
-
-setPromptEnglish('');
-  setPromptIndonesian('');
-  setRawJson('');
-}
-
-};
-
-const handleGeneratePrompt = async () => { if (!imageFile) { alert('Silakan unggah gambar terlebih dahulu.'); return; }
-
-setIsGenerating(true);
-setPromptEnglish('');
-setPromptIndonesian('');
-setRawJson('');
-
-try {
-  const masterPrompt = `Analisis gambar ini dan buatkan prompt AI yang mendetail dalam Bahasa Inggris dan Indonesia (format JSON: {\"prompt_en\": \"...\", \"prompt_id\": \"...\"}). Gunakan konteks: [Model AI: ${selectedModel}, Gaya: ${selectedStyle}, Kualitas: ${selectedQuality}, Shot: ${selectedShot}, Perangkat: ${selectedDevice}, Rasio: ${selectedRatio}]`;
-
-  const imagePart = await fileToGenerativePart(imageFile);
-  const payload = { prompt: masterPrompt, image: imagePart };
-
-  // TODO: Ganti dengan panggilan fetch ke backend / AI provider
-  // Contoh placeholder untuk demo
-  await new Promise(r => setTimeout(r, 700));
-  const fakeResponse = {
-    prompt_en: `A highly detailed photorealistic image based on the uploaded picture. Context: ${selectedStyle}, ${selectedQuality}, ${selectedShot}.`,
-    prompt_id: `Sebuah gambar photorealistic yang sangat detail berdasarkan gambar yang diunggah. Konteks: ${selectedStyle}, ${selectedQuality}, ${selectedShot}.`,
-  };
-
-  const text = JSON.stringify(fakeResponse);
-  setRawJson(JSON.stringify(JSON.parse(text), null, 2));
-  setPromptEnglish(fakeResponse.prompt_en);
-  setPromptIndonesian(fakeResponse.prompt_id);
-
-  // (Jika pakai fetch, replace di sini dengan parse response)
-  // const res = await fetch('/api/generate', { method: 'POST', body: JSON.stringify(payload) })
-  // const data = await res.json();
-
-} catch (err: any) {
-  const msg = err?.message ?? 'Unknown error';
-  setPromptEnglish(`Gagal membuat prompt: ${msg}`);
-  setPromptIndonesian(`Gagal membuat prompt: ${msg}`);
-  setRawJson(`{ "error": "${msg}" }`);
-} finally {
-  setIsGenerating(false);
-}
-
-};
-
-return ( <div className="dark min-h-screen bg-gray-900 text-white p-4 md:p-8 font-sans"> <header className="text-center pt-4 pb-6 max-w-md mx-auto"> <h1 className="text-5xl font-extrabold text-white tracking-wider uppercase">BACKEND</h1> <h2 className="text-xl font-light text-blue-400 mt-1">Image Prompt Generator</h2> <div className="flex justify-center gap-6 my-5"> <SocialIcon href="#"> <IoLogoWhatsapp className="w-8 h-8" /> </SocialIcon> <SocialIcon href="#"> <BsThreads className="w-8 h-8" /> </SocialIcon> <SocialIcon href="#"> <IoLogoTiktok className="w-8 h-8" /> </SocialIcon> </div> </header>
-
-<div className="max-w-md mx-auto bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
-    <div className="p-6">
-      {/* Upload area */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-300 mb-2">Unggah Gambar</label>
-        <div className="flex gap-3 items-center">
-          <input type="file" accept="image/*" onChange={handleFileChange} className="text-sm text-gray-400 file:bg-gray-700 file:text-white file:py-2 file:px-3 file:rounded-md" />
-          {imagePreview && (
-            <img src={imagePreview} alt="preview" className="w-20 h-20 object-cover rounded-md border border-gray-700" />
-          )}
-        </div>
-        <p className="text-xs text-gray-400 mt-2">Format: JPG/PNG/WebP. Ukuran disarankan &lt; 8MB.</p>
-      </div>
-
-      {/* Dropdowns */}
-      <DropdownSection title="Pilih Model AI" options={CATEGORIES.models} selectedValue={selectedModel} onChange={(e) => setModel(e.target.value)} />
-      <DropdownSection title="Gaya" options={CATEGORIES.styles} selectedValue={selectedStyle} onChange={(e) => setStyle(e.target.value)} />
-      <div className="grid grid-cols-2 gap-3">
-        <DropdownSection title="Kualitas" options={CATEGORIES.quality} selectedValue={selectedQuality} onChange={(e) => setQuality(e.target.value)} />
-        <DropdownSection title="Shot" options={CATEGORIES.cameraShots} selectedValue={selectedShot} onChange={(e) => setShot(e.target.value)} />
-      </div>
-
-      <button onClick={handleGeneratePrompt} disabled={isGenerating} className="mt-4 w-full py-2 rounded-lg bg-blue-500 hover:bg-blue-600 disabled:opacity-60 transition">
-        {isGenerating ? 'Sedang Membuat...' : 'Buat Prompt'}
+{/* --- KOTAK OUTPUT --- */}
+  <div className="w-full max-w-2xl bg-[#151515] p-5 rounded-2xl shadow-xl relative border border-gray-700">
+    {/* Tombol Copy & JSON */}
+    <div className="absolute right-4 top-4 flex gap-2">
+      <button onClick={handleCopy} className="p-2 bg-gray-700 rounded-lg hover:bg-gray-600">
+        <Copy className="w-5 h-5" />
+      </button>
+      <button className="p-2 bg-gray-700 rounded-lg hover:bg-gray-600">
+        <FileJson className="w-5 h-5" />
       </button>
     </div>
 
-    <div className="w-full h-2 bg-gray-900"></div>
-
-    <div className="p-6">
-      <div className="mb-4">
-        <Checkbox label="Tampilkan Hasil JSON Mentah" isChecked={showJson} onChange={() => setShowJson(!showJson)} />
-      </div>
-
-      {showJson ? (
-        <>
-          <label htmlFor="raw-json" className="block text-sm font-medium text-gray-300 mb-2">Hasil JSON (Raw)</label>
-          <div className="relative w-full">
-            <textarea id="raw-json" readOnly value={rawJson} className="w-full h-40 p-3 bg-gray-700 rounded text-white" placeholder="Hasil JSON akan muncul di sini..." />
-            <CopyButton textToCopy={rawJson} />
-          </div>
-        </>
-      ) : (
-        <>
-          <label htmlFor="prompt-english" className="block text-sm font-medium text-gray-300 mb-2">Prompt (English)</label>
-          <div className="relative w-full mb-4">
-            <textarea id="prompt-english" readOnly value={promptEnglish} className="w-full h-40 p-3 bg-gray-700 rounded text-white" placeholder="Prompt akan muncul di sini..." />
-            <CopyButton textToCopy={promptEnglish} />
-          </div>
-
-          <label htmlFor="prompt-indonesia" className="block text-sm font-medium text-gray-300 mb-2">Prompt (Bahasa Indonesia)</label>
-          <div className="relative w-full">
-            <textarea id="prompt-indonesia" readOnly value={promptIndonesian} className="w-full h-40 p-3 bg-gray-700 rounded text-white" placeholder="Prompt akan muncul di sini..." />
-            <CopyButton textToCopy={promptIndonesian} />
-          </div>
-        </>
-      )}
+    {/* Selector Bahasa */}
+    <div className="flex gap-3 mb-4">
+      <button
+        onClick={() => setSelectedLang("id")}
+        className={`px-4 py-2 rounded-lg ${selectedLang === "id" ? "bg-blue-600" : "bg-gray-700"}`}
+      >ID</button>
+      <button
+        onClick={() => setSelectedLang("en")}
+        className={`px-4 py-2 rounded-lg ${selectedLang === "en" ? "bg-blue-600" : "bg-gray-700"}`}
+      >EN</button>
     </div>
+
+    <textarea
+      value={output[selectedLang]}
+      onChange={(e) => setOutput({ ...output, [selectedLang]: e.target.value })}
+      placeholder="Output akan muncul di sini..."
+      className="w-full min-h-[220px] bg-black p-4 rounded-xl text-sm outline-none border border-gray-700"
+    />
   </div>
 
+  {/* FAQ */}
   <FAQ />
 
-  <footer className="text-center py-6 max-w-md mx-auto">
-    <p className="text-xl font-semibold text-gray-400">Copyright@2025 by BackEnd</p>
-  </footer>
+  {/* Footer */}
+  <footer className="text-gray-500 mt-10 text-sm">© 2025 Backend Generator</footer>
 </div>
 
 ); }
