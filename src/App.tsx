@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { IoLogoWhatsapp, IoLogoTiktok } from 'react-icons/io5'; 
 import { BsThreads } from 'react-icons/bs'; 
 
-// =======================
-// TYPESCRIPT TYPES
-// =======================
+/*
+ * =======================================================================
+ * DEFINISI TIPE TYPESCRIPT
+ * =======================================================================
+ */
 interface DropdownOption { id: string; name: string; }
 interface DropdownSectionProps { title: string; options: DropdownOption[]; selectedValue: string; onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void; }
 interface SocialIconProps { href: string; children: React.ReactNode; }
@@ -12,9 +14,11 @@ interface CheckboxProps { label: string; isChecked: boolean; onChange: () => voi
 interface Faq { id: number; question: string; answer: string; }
 interface FAQItemProps { faq: Faq; isOpen: boolean; onToggle: () => void; }
 
-// =======================
-// DATABASE
-// =======================
+/*
+ * =======================================================================
+ * DATABASE
+ * =======================================================================
+ */
 const CATEGORIES = {
   models: [
     { id: 'gemini-flash', name: 'Gemini Flash' },
@@ -46,13 +50,17 @@ const CATEGORIES = {
 
 const faqData: Faq[] = [
   { id: 1, question: "Apa itu BackEnd Generator?", answer: "Alat bantu untuk menganalisis sebuah gambar dan membuat prompt teks yang detail." },
-  { id: 2, question: "Bagaimana cara kerjanya?", answer: "1. Unggah gambar.\n2. Atur parameter.\n3. Klik 'Buat Prompt'.\n4. Aplikasi membuat prompt melalui AI." },
+  { id: 2, question: "Bagaimana cara kerjanya?", answer: "1. Unggah gambar. \n2. Atur parameter. \n3. Klik 'Buat Prompt'. \n4. Aplikasi membuat prompt melalui AI." },
   { id: 3, question: "Apakah aplikasi ini gratis?", answer: "Ya, aplikasi ini gratis digunakan." }
 ];
 
-// =======================
-// KOMPONEN UI
-// =======================
+/*
+ * =======================================================================
+ * KOMPONEN UI
+ * =======================================================================
+ */
+
+// Dropdown
 const DropdownSection = ({ title, options, selectedValue, onChange }: DropdownSectionProps) => (
   <div className="mb-4">
     <label className="text-sm font-medium text-gray-300 mb-1 block">{title}</label>
@@ -68,12 +76,14 @@ const DropdownSection = ({ title, options, selectedValue, onChange }: DropdownSe
   </div>
 );
 
+// Social Icon
 const SocialIcon = ({ href, children }: SocialIconProps) => (
   <a href={href} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-transform duration-200 transform hover:scale-110">
     {children}
   </a>
 );
 
+// Checkbox
 const Checkbox = ({ label, isChecked, onChange }: CheckboxProps) => (
   <label className="flex items-center space-x-2 cursor-pointer">
     <input type="checkbox" checked={isChecked} onChange={onChange} className="form-checkbox h-4 w-4 rounded text-blue-500 bg-gray-700 border-gray-600 focus:ring-blue-500"/>
@@ -81,6 +91,7 @@ const Checkbox = ({ label, isChecked, onChange }: CheckboxProps) => (
   </label>
 );
 
+// FAQ Item
 const FAQItem = ({ faq, isOpen, onToggle }: FAQItemProps) => (
   <div className="border-b border-gray-700">
     <button onClick={onToggle} className="flex justify-between w-full py-4 text-left">
@@ -91,6 +102,7 @@ const FAQItem = ({ faq, isOpen, onToggle }: FAQItemProps) => (
   </div>
 );
 
+// FAQ Wrapper
 const FAQ = () => {
   const [openId, setOpenId] = useState<number | null>(null);
   return (
@@ -105,6 +117,7 @@ const FAQ = () => {
   );
 };
 
+// Copy Button
 const CopyButton = ({ textToCopy }: { textToCopy: string }) => {
   const [copyStatus, setCopyStatus] = useState('Copy');
   const handleCopy = () => {
@@ -118,7 +131,7 @@ const CopyButton = ({ textToCopy }: { textToCopy: string }) => {
   );
 };
 
-// Helper untuk base64 image
+// Helper file to base64
 const fileToGenerativePart = async (file: File) => {
   const base64Data = await new Promise<string>((resolve) => {
     const reader = new FileReader();
@@ -128,9 +141,11 @@ const fileToGenerativePart = async (file: File) => {
   return { inlineData: { data: base64Data, mimeType: file.type } };
 };
 
-// =======================
-// APP UTAMA
-// =======================
+/*
+ * =======================================================================
+ * APLIKASI UTAMA
+ * =======================================================================
+ */
 export default function App() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -150,7 +165,7 @@ export default function App() {
   const [rawJson, setRawJson] = useState('');
   const [showJson, setShowJson] = useState(false);
 
-  // File upload
+  // File change
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -165,9 +180,7 @@ export default function App() {
     }
   };
 
-  // =======================
-  // HANDLE GENERATE PROMPT
-  // =======================
+  // Generate Prompt (Dummy)
   const handleGeneratePrompt = async () => {
     if (!imageFile) { alert('Silakan unggah gambar terlebih dahulu.'); return; }
     setIsGenerating(true);
@@ -176,42 +189,21 @@ export default function App() {
     setRawJson('');
 
     try {
-      const masterPrompt = `Analisis gambar ini dan buatkan prompt AI yang mendetail dalam bahasa Inggris dan Indonesia.
-Konteks: [Model: ${selectedModel}, Style: ${selectedStyle}, Quality: ${selectedQuality}, Shot: ${selectedShot}, Device: ${selectedDevice}, Ratio: ${selectedRatio}]`;
-
-      const imagePart = await fileToGenerativePart(imageFile);
-
-      const response = await fetch('http://localhost:5000/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: masterPrompt, image: imagePart }),
-      });
-
-      const result = await response.json();
-      const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-      if (text) {
-        const jsonResponse = JSON.parse(text);
-        setRawJson(JSON.stringify(jsonResponse, null, 2));
-        setPromptEnglish(jsonResponse.prompt_en);
-        setPromptIndonesian(jsonResponse.prompt_id);
-      } else {
-        throw new Error('Respon AI tidak valid atau kosong.');
-      }
-
-    } catch (error: any) {
-      const msg = `Gagal membuat prompt: ${error.message}`;
+      // Dummy API response
+      const json = { prompt_en: `Prompt AI English (${selectedModel})`, prompt_id: `Prompt AI Indonesia (${selectedModel})` };
+      setRawJson(JSON.stringify(json, null, 2));
+      setPromptEnglish(json.prompt_en);
+      setPromptIndonesian(json.prompt_id);
+    } catch (err: any) {
+      const msg = `Gagal membuat prompt: ${err.message}`;
       setPromptEnglish(msg);
       setPromptIndonesian(msg);
-      setRawJson(`{ "error": "${error.message}" }`);
+      setRawJson(`{ "error": "${err.message}" }`);
     } finally {
       setIsGenerating(false);
     }
   };
 
-  // =======================
-  // JSX RENDER
-  // =======================
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8 font-sans">
       <header className="text-center pt-4 pb-6 max-w-md mx-auto">
@@ -226,6 +218,7 @@ Konteks: [Model: ${selectedModel}, Style: ${selectedStyle}, Quality: ${selectedQ
 
       <div className="max-w-md mx-auto bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
         <div className="p-6">
+
           {/* Upload */}
           <div className="mb-4">
             <input type="file" accept="image/*" onChange={handleFileChange} className="w-full text-gray-300"/>
@@ -276,6 +269,7 @@ Konteks: [Model: ${selectedModel}, Style: ${selectedStyle}, Quality: ${selectedQ
         </div>
       </div>
 
+      {/* FAQ */}
       <FAQ />
 
       <footer className="text-center py-6 max-w-md mx-auto">
@@ -283,4 +277,4 @@ Konteks: [Model: ${selectedModel}, Style: ${selectedStyle}, Quality: ${selectedQ
       </footer>
     </div>
   );
-}
+            }
