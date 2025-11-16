@@ -7,25 +7,16 @@ interface FAQItemProps { faq: Faq; isOpen: boolean; onToggle: () => void; }
 // --- Database FAQ ---
 const faqData: Faq[] = [
   { id: 1, question: "Apa itu BackEnd Generator?", answer: "Alat bantu untuk menganalisis sebuah gambar dan secara otomatis membuat prompt teks yang detail, menggunakan teknologi Gemini." },
-  { id: 2, question: "Bagaimana cara kerjanya?", answer: "1. Unggah gambar.\n2. Klik 'ANALISA GAMBAR'.\n3. Tunggu hingga prompt muncul." },
+  { id: 2, question: "Bagaimana cara kerjanya?", answer: "1. Unggah gambar.\n2. Klik 'ANALISA GAMBAR'.\n3. Tunggu hingga prompt muncul.\n4. Ganti rasio untuk melihat prompt diperbarui." },
   { id: 3, question: "Apakah aplikasi ini gratis?", answer: "Ya, aplikasi ini gratis digunakan." }
 ];
 
 // --- Komponen FAQItem ---
 const FAQItem = ({ faq, isOpen, onToggle }: FAQItemProps) => (
   <div className="border-b border-gray-700">
-    <button
-      onClick={onToggle}
-      className="flex justify-between items-center w-full py-5 text-left"
-    >
+    <button onClick={onToggle} className="flex justify-between items-center w-full py-5 text-left">
       <span className="text-md font-medium text-gray-200">{faq.question}</span>
-      <svg
-        className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
       </svg>
     </button>
@@ -35,7 +26,7 @@ const FAQItem = ({ faq, isOpen, onToggle }: FAQItemProps) => (
   </div>
 );
 
-// --- Komponen FAQ Wrapper ---
+// --- Komponen FAQ ---
 const FAQ = () => {
   const [openId, setOpenId] = useState<number | null>(null);
   const handleToggle = (id: number) => setOpenId(openId === id ? null : id);
@@ -52,26 +43,40 @@ const FAQ = () => {
   );
 };
 
+// --- Komponen Utama App ---
 export default function App() {
   const [image, setImage] = useState<File | null>(null);
   const [prompt, setPrompt] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
   const [ratio, setRatio] = useState("3:4");
+
+  const generatePrompt = (selectedRatio: string) => {
+    return `Prompt detail untuk gambar ini:
+Model: gemini-flash
+Ratio: ${selectedRatio}
+Camera Shot: close-up
+Quality: standard
+Device: iphone-16-pro-max
+Style: photorealistic`;
+  };
 
   const handleAnalyze = () => {
     if (!image) return alert("Silakan pilih gambar terlebih dahulu.");
     setLoading(true);
     setPrompt("");
-    setShowMenu(false);
 
     setTimeout(() => {
-      setPrompt(
-        `Prompt detail untuk gambar ini:\nModel: gemini-flash\nRatio: ${ratio}\nCamera Shot: close-up\nQuality: standard\nDevice: iphone-16-pro-max\nStyle: photorealistic`
-      );
-      setShowMenu(true);
+      setPrompt(generatePrompt(ratio));
       setLoading(false);
     }, 1500);
+  };
+
+  const handleRatioChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newRatio = e.target.value;
+    setRatio(newRatio);
+    if (prompt) {
+      setPrompt(generatePrompt(newRatio));
+    }
   };
 
   return (
@@ -101,34 +106,30 @@ export default function App() {
         </button>
       </div>
 
-      {/* Dropdown Rasio dengan animasi fade */}
-      <div
-        className={`max-w-xs mx-auto mb-4 transition-all duration-500 ease-out transform ${showMenu ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
-      >
-        {showMenu && (
-          <>
-            <label className="block mb-2">Aspek Rasio:</label>
-            <select
-              value={ratio}
-              onChange={e => setRatio(e.target.value)}
-              className="w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-700"
-            >
-              <option>3:4 (Portrait)</option>
-              <option>4:3 (Landscape)</option>
-              <option>1:1 (Square)</option>
-              <option>16:9 (Widescreen)</option>
-              <option>9:16 (Tall)</option>
-            </select>
-          </>
-        )}
-      </div>
+      {/* Dropdown Rasio */}
+      {prompt && (
+        <div className="max-w-xs mx-auto mb-4">
+          <label className="block mb-2">Aspek Rasio:</label>
+          <select
+            value={ratio}
+            onChange={handleRatioChange}
+            className="w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-700"
+          >
+            <option>3:4 (Portrait)</option>
+            <option>4:3 (Landscape)</option>
+            <option>1:1 (Square)</option>
+            <option>16:9 (Widescreen)</option>
+            <option>9:16 (Tall)</option>
+          </select>
+        </div>
+      )}
 
-      {/* Prompt dengan animasi fade */}
-      <div
-        className={`max-w-md mx-auto p-4 bg-gray-800 rounded-2xl shadow-2xl mb-6 transition-all duration-500 ease-out transform ${prompt ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
-      >
-        {prompt}
-      </div>
+      {/* Prompt */}
+      {prompt && (
+        <div className="max-w-md mx-auto p-4 bg-gray-800 rounded-2xl shadow-2xl mb-6 whitespace-pre-line">
+          {prompt}
+        </div>
+      )}
 
       {/* FAQ */}
       <FAQ />
