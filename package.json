@@ -1,25 +1,30 @@
 {
-  "name": "react-typescript-generator",
+  "name": "react-typescript-image-prompt-generator",
   "version": "1.0.0",
-  "description": "React and TypeScript example starter project",
+  "description": "React + TypeScript project for generating detailed AI image prompts from text and images",
   "keywords": [
-    "typescript",
     "react",
-    "starter"
+    "typescript",
+    "ai",
+    "image-prompt",
+    "generator"
   ],
+  "private": true,
   "main": "src/index.tsx",
   "dependencies": {
-    "react": "18.0.0",
-    "react-dom": "18.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "firebase": "9.22.1",
-    "react-icons": "latest",
-    "ajv": "6.12.6",
-    "typescript": "4.9.5"
+    "firebase": "^9.22.1",
+    "react-icons": "^4.10.1",
+    "framer-motion": "^10.12.16",
+    "react-hot-toast": "^2.4.0",
+    "ajv": "6.12.6"
   },
   "devDependencies": {
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0"
+    "typescript": "^4.9.5",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11"
   },
   "overrides": {
     "ajv": "6.12.6"
