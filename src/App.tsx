@@ -76,7 +76,11 @@ const CopyButton = ({ textToCopy }: { textToCopy: string }) => {
 const FAQ: React.FC = () => (
   <section className="max-w-md mx-auto my-8 text-gray-300">
     <h3 className="text-xl font-bold mb-2">FAQ</h3>
-    <p>Belum ada FAQ.</p>
+    <ul className="list-disc pl-5 space-y-1">
+      <li>Bagaimana cara menggunakan generator ini? Unggah gambar, pilih opsi, klik "Buat Prompt".</li>
+      <li>Apakah prompt bisa di-copy? Ya, klik tombol "COPY" di output.</li>
+      <li>Bahasa prompt tersedia dalam EN & ID.</li>
+    </ul>
   </section>
 );
 
@@ -121,13 +125,15 @@ export default function App() {
     if (!imageFile) { alert('Silakan unggah gambar terlebih dahulu.'); return; }
     setIsGenerating(true);
     try {
+      // Dummy prompt, bisa diganti API
       const json = {
-        prompt_en: `Prompt AI English (${selectedModel})`,
-        prompt_id: `Prompt AI Indonesia (${selectedModel})`
+        prompt_en: `Create an image with model ${selectedModel}, ratio ${selectedRatio}, shot ${selectedShot}, quality ${selectedQuality}, device ${selectedDevice}, style ${selectedStyle}.`,
+        prompt_id: `Buat gambar dengan model ${selectedModel}, rasio ${selectedRatio}, shot ${selectedShot}, kualitas ${selectedQuality}, perangkat ${selectedDevice}, gaya ${selectedStyle}.`
       };
       setRawJson(JSON.stringify(json, null, 2));
       setPromptEnglish(json.prompt_en);
       setPromptIndonesian(json.prompt_id);
+      setOutputTab('EN'); // otomatis tampilkan prompt EN setelah generate
     } catch {
       setRawJson('{ "error": "Gagal membuat prompt" }');
       setPromptEnglish('Gagal membuat prompt');
@@ -213,4 +219,4 @@ export default function App() {
       </footer>
     </div>
   );
-}
+       }
