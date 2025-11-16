@@ -16,14 +16,14 @@
     "react-icons": "latest",
     "ajv": "6.12.6",
     "typescript": "4.9.5"
-  }, // <--- Komputer Anda kehilangan koma di sini
+  },
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0"
-  }, // <--- Komputer Anda kehilangan koma di sini
+  },
   "overrides": {
     "ajv": "6.12.6"
-  }, // <--- Komputer Anda kehilangan koma di sini
+  }, 
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
