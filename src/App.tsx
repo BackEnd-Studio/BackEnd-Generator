@@ -27,32 +27,52 @@ export default function App() {
   };
 
   // --- ANALISA GAMBAR ---
-  const handleAnalyze = async () => {
-    if (!image) {
-      alert("Upload gambar dulu.");
-      return;
-    }
+const handleAnalyze = async () => {
+  if (!image) {
+    alert("Upload gambar dulu.");
+    return;
+  }
 
-    setLoading(true);
-    setResult("");
+  setLoading(true);
+  setResult("");
 
-    try {
-      const response = await fetch("http://127.0.0.1:5000/analyze", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ imageBase64 }),
-      });
-
-      const data = await res.json();
-
-      setResult(data.prompt || "Tidak ada hasil dari backend.");
-    } catch (err) {
-      console.error(err);
-      setResult("Gagal terhubung ke backend.");
-    }
-
-    setLoading(false);
+  // --- Convert gambar ke Base64 ---
+  const toBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result?.toString().split(",")[1]; 
+        resolve(base64 || "");
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   };
+
+  const imageBase64 = await toBase64(image);
+
+  try {
+    const response = await fetch("http://127.0.0.1:5000/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageBase64 }), // KINI TIDAK KOSONG
+    });
+
+    const data = await response.json();
+
+    if (data.prompt) {
+      setResult(data.prompt);
+    } else {
+      setResult("Backend tidak mengirim prompt.");
+    }
+
+  } catch (err) {
+    console.log(err);
+    setResult("Gagal terhubung ke backend.");
+  }
+
+  setLoading(false);
+};
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-5">
