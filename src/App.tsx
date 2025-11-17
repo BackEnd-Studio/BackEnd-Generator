@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
 import FAQ from "./components/FAQ";
 
 export default function App() {
   const [image, setImage] = useState<string | null>(null);
-  const [imageType, setImageType] = useState<string>(""); // Menyimpan MIME type
+  const [imageType, setImageType] = useState<string>("");
   const [ratio, setRatio] = useState("3:4");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
@@ -24,13 +25,12 @@ export default function App() {
   };
 
   // -----------------------------
-  // HANDLE UPLOAD GAMBAR
+  // HANDLE DROP
   // -----------------------------
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    if (acceptedFiles.length === 0) return;
 
-    // Validasi tipe file
+    const file = acceptedFiles[0];
     if (!file.type.startsWith("image/")) {
       alert("File harus berupa gambar!");
       return;
@@ -39,10 +39,17 @@ export default function App() {
     const base64 = await convertToBase64(file);
     setImage(base64);
     setImageType(file.type);
-  };
+    setResult(""); // reset result
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { "image/*": [] },
+    multiple: false,
+  });
 
   // -----------------------------
-  // ANALISA GAMBAR (KIRIM KE BACKEND)
+  // ANALISA GAMBAR
   // -----------------------------
   const handleAnalyze = async () => {
     if (!image) {
@@ -91,13 +98,20 @@ export default function App() {
       <h1 className="text-3xl font-bold text-center mb-6">BackEnd Generator</h1>
 
       <div className="max-w-md mx-auto">
-        {/* Upload */}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="mb-4"
-        />
+        {/* Drag & Drop Area */}
+        <div
+          {...getRootProps()}
+          className={`border-2 border-dashed rounded-lg p-10 mb-4 text-center cursor-pointer transition-colors ${
+            isDragActive ? "border-blue-500 bg-gray-800" : "border-gray-700 bg-gray-900"
+          }`}
+        >
+          <input {...getInputProps()} />
+          {isDragActive ? (
+            <p>Drop gambar di sini...</p>
+          ) : (
+            <p>Drag & drop gambar atau klik untuk memilih file</p>
+          )}
+        </div>
 
         {/* Preview */}
         {image && (
@@ -163,4 +177,4 @@ export default function App() {
       <FAQ />
     </div>
   );
-              }
+}
