@@ -3,83 +3,95 @@ import FAQ from "./components/FAQ";
 
 export default function App() {
   const [image, setImage] = useState<string | null>(null);
+  const [imageType, setImageType] = useState<string>(""); // Menyimpan MIME type
   const [ratio, setRatio] = useState("3:4");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
 
-  // --- Convert File to Base64 ---
+  // -----------------------------
+  // KONVERSI FILE → BASE64
+  // -----------------------------
   const convertToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result?.toString() || "");
-      reader.onerror = (error) => reject(error);
+      reader.onload = () => {
+        const base64 = reader.result?.toString().split(",")[1] || "";
+        resolve(base64);
+      };
+      reader.onerror = reject;
     });
   };
 
-  // --- Handle Upload ---
+  // -----------------------------
+  // HANDLE UPLOAD GAMBAR
+  // -----------------------------
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const base64 = await convertToBase64(file);
-    setImage(base64.replace("data:image/jpeg;base64,", "").replace("data:image/png;base64,", ""));
-  };
-
-  // --- ANALISA GAMBAR ---
-const handleAnalyze = async () => {
-  if (!image) {
-    alert("Upload gambar dulu.");
-    return;
-  }
-
-  setLoading(true);
-  setResult("");
-
-  // --- Convert gambar ke Base64 ---
-  const toBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64 = reader.result?.toString().split(",")[1]; 
-        resolve(base64 || "");
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const imageBase64 = await toBase64(image);
-
-  try {
-    const response = await fetch("http://127.0.0.1:5000/analyze", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ imageBase64 }), // KINI TIDAK KOSONG
-    });
-
-    const data = await response.json();
-
-    if (data.prompt) {
-      setResult(data.prompt);
-    } else {
-      setResult("Backend tidak mengirim prompt.");
+    // Validasi tipe file
+    if (!file.type.startsWith("image/")) {
+      alert("File harus berupa gambar!");
+      return;
     }
 
-  } catch (err) {
-    console.log(err);
-    setResult("Gagal terhubung ke backend.");
-  }
+    const base64 = await convertToBase64(file);
+    setImage(base64);
+    setImageType(file.type);
+  };
 
-  setLoading(false);
-};
+  // -----------------------------
+  // ANALISA GAMBAR (KIRIM KE BACKEND)
+  // -----------------------------
+  const handleAnalyze = async () => {
+    if (!image) {
+      alert("Upload gambar dulu.");
+      return;
+    }
 
+    setLoading(true);
+    setResult("");
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageBase64: image, imageType, ratio }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Server error");
+      }
+
+      setResult(data.prompt || "Backend tidak mengirim prompt.");
+    } catch (err) {
+      console.error(err);
+      setResult("Gagal terhubung ke backend.");
+    }
+
+    setLoading(false);
+  };
+
+  // -----------------------------
+  // RESET IMAGE
+  // -----------------------------
+  const handleReset = () => {
+    setImage(null);
+    setImageType("");
+    setResult("");
+  };
+
+  // -----------------------------
+  // RENDER UI
+  // -----------------------------
   return (
     <div className="min-h-screen bg-gray-900 text-white p-5">
       <h1 className="text-3xl font-bold text-center mb-6">BackEnd Generator</h1>
 
-      {/* Upload */}
       <div className="max-w-md mx-auto">
+        {/* Upload */}
         <input
           type="file"
           accept="image/*"
@@ -91,14 +103,14 @@ const handleAnalyze = async () => {
         {image && (
           <div className="w-full mb-4">
             <img
-              src={`data:image/jpeg;base64,${image}`}
+              src={`data:${imageType};base64,${image}`}
               className="w-full rounded-lg shadow-lg"
               alt="preview"
             />
           </div>
         )}
 
-        {/* RATIO */}
+        {/* Aspect Ratio */}
         {image && (
           <div className="mb-4">
             <label className="text-sm text-gray-300">Aspect Ratio</label>
@@ -116,17 +128,29 @@ const handleAnalyze = async () => {
           </div>
         )}
 
-        {/* ANALISA BUTTON */}
+        {/* Buttons */}
         {image && (
-          <button
-            onClick={handleAnalyze}
-            className="w-full py-3 mt-3 text-lg font-bold bg-blue-600 rounded-lg hover:bg-blue-700"
-          >
-            {loading ? "Menganalisa..." : "ANALISA GAMBAR"}
-          </button>
+          <>
+            <button
+              onClick={handleAnalyze}
+              disabled={loading}
+              className={`w-full py-3 mt-3 text-lg font-bold rounded-lg ${
+                loading ? "bg-gray-600 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+              }`}
+            >
+              {loading ? "Menganalisa..." : "ANALISA GAMBAR"}
+            </button>
+
+            <button
+              onClick={handleReset}
+              className="w-full py-3 mt-2 text-lg font-bold bg-gray-600 rounded-lg hover:bg-gray-700"
+            >
+              RESET
+            </button>
+          </>
         )}
 
-        {/* HASIL */}
+        {/* Result */}
         {result && (
           <div className="mt-6 bg-gray-800 p-4 rounded-xl whitespace-pre-line">
             <h2 className="text-lg font-bold mb-2">Prompt Hasil</h2>
@@ -135,8 +159,8 @@ const handleAnalyze = async () => {
         )}
       </div>
 
-      {/* FAQ SELALU TAMPIL */}
+      {/* FAQ */}
       <FAQ />
     </div>
   );
-}
+              }
